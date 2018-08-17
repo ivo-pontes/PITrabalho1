@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*
 
-from ProcessamentoImagem import ProcessamentoImagem
+from VizinhoMaisProximo import VizinhoMaisProximo
+from InterpolacaoBilinear import InterpolacaoBilinear
 
 if __name__ == '__main__':
     print("Processamento de Imagens.")
 
-    pi = ProcessamentoImagem("img/lena-impar.png")
+    #vizinho = VizinhoMaisProximo("img/lena-impar.png")
+    #vizinho.carregarImagem()
+    #vizinho.porReducao()
+    #vizinho.porAmpliacao()
 
-    pi.carregarImagem()
-    pi.vizinhoMaisProximoPorReducao()
+    interpolacao = InterpolacaoBilinear("img/lena-impar.png")
+    interpolacao.carregarImagem()
+    #interpolacao.paraReducao()
+    interpolacao.paraAmpliacao()
 
     print("Fim execução!!")
    
