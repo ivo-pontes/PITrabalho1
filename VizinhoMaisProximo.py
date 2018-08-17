@@ -12,13 +12,14 @@ class VizinhoMaisProximo():
 		self.m = 0
 		self.n = 0
 		self.matriz = []
+		self.img = []
 
 	'''
 	Abrindo o arquivo e pegando dimensões MxN
 	'''
 	def carregarImagem(self):
 		img = Image.open(self.nome_imagem)
-		img.show()
+		self.img = img
 		#Converte Imagem Object para Matriz
 		self.matriz = np.asarray(img.convert('L'))
 		#Dimensão M
@@ -48,7 +49,8 @@ class VizinhoMaisProximo():
 					saida[i/2][j/2] = self.matriz[i][j]
 					
 		print(saida)
-		imagem = Image.fromarray(saida)		
+		imagem = Image.fromarray(saida)
+		self.img.show()		
 		imagem.show()
 
 	'''
@@ -76,4 +78,5 @@ class VizinhoMaisProximo():
 
 		print(saida)
 		imagem = Image.fromarray(saida)		
+		self.img.show()
 		imagem.show()
