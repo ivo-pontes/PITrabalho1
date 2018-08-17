@@ -11,13 +11,14 @@ class InterpolacaoBilinear():
 		self.m = 0
 		self.n = 0
 		self.matriz = []
+		self.img = []
 
 	'''
 	Abrindo o arquivo e pegando dimensões MxN
 	'''
 	def carregarImagem(self):
 		img = Image.open(self.nome_imagem)
-		img.show()
+		self.img = img
 		#Converte Imagem Object para Matriz
 		self.matriz = np.asarray(img.convert('L'))
 		#Dimensão M
@@ -52,6 +53,7 @@ class InterpolacaoBilinear():
 											
 		print(saida)
 		imagem = Image.fromarray(saida)		
+		self.img.show()
 		imagem.show()
 
 	'''
@@ -65,19 +67,37 @@ class InterpolacaoBilinear():
 		n1 = np.size(saida, 0)
 		print("Linhas: {}\nColunas: {}\n".format(m1,n1))
 
-		for i in range(m1):
-			for j in range(n1):
+		for i in range(m1-1):
+			for j in range(n1-1):
 				#Se coluna j é par, então saida[i][j] = matriz[metade][metade]
 				if j%2 == 0 and i%2 == 0:
-					saida[i][j] = self.matriz[i/2][j/2]
-				elif j!=0 and j%2 != 0:#Se é impar, pega valor na saida[i][j-1]
-					saida[i][j] = saida[i][j-1]
-				#Se linha i	é impar, então recebe valor da linha par
-				if i%2 != 0:
-					saida[i][j] = saida[i-1][j]
-				
-				
+					saida[i][j] = self.matriz[int(i/2)][int(j/2)]
+
+
+		for i in range(m1-1):
+			for j in range(n1-1):
+				#Se c, c = (f(i,j) + f(i,j+1) + f(i+1,j) + f(i+1,j+1))/4
+				if i%2 != 0 and j%2 != 0:
+					soma = int(saida[i-1][j-1]) + int(saida[i-1][j+1])
+					soma += int(saida[i+1][j-1]) + int(saida[i+1][j+1])
+					saida[i][j] = int(soma/4)
+				#Se a ou e, a = (f(i,j) + f(i,j+1))/2
+				elif i%2 == 0 and j%2 != 0:
+					saida[i][j] = int((int(saida[i][j-1]) + int(saida[i][j+1])) /2)
+				#Se b ou d, b = (f(i,j+1) + f(i+1,j+1))/2
+				elif i%2 != 0 and (i-1)%2 == 0:
+					saida[i][j] = int((int(saida[i-1][j]) + int(saida[i+1][j])) /2)
+				#Tratamento da última coluna
+				if i == (m1-2):
+					saida[m1-1][j] = saida[i][j]
+				#Tratamento da última linha
+				if j == (n1-2):
+					saida[i][n1-1] = saida[i][j]
+					
+		#Tratamento do último pixel: Matriz[M][N]
+		saida[m1-1][n1-1] = saida[m1-1][n1-2]
 
 		print(saida)
 		imagem = Image.fromarray(saida)		
+		self.img.show()
 		imagem.show()
